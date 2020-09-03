@@ -68,6 +68,21 @@
         <tag>HEAD</tag>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.jahia.modules</groupId>
+            <artifactId>external-provider</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.gemini.blueprint</groupId>
+            <artifactId>gemini-blueprint-core</artifactId>
+            <version>1.0.2.RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <repositories>
         <repository>
             <id>jahia-public</id>
@@ -91,7 +106,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Jahia-Depends>default</Jahia-Depends>
+                        <Jahia-Depends>default,external-provider,assets</Jahia-Depends>
                     </instructions>
                 </configuration>
             </plugin>
