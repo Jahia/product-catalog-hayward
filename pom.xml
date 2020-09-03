@@ -55,15 +55,17 @@
         <version>8.0.0.0</version>
     </parent>
     <groupId>org.jahiapresales.modules</groupId>
-    <artifactId>product-catalog</artifactId>
-    <name>Product Catalog</name>
+    <artifactId>product-catalog-hayward</artifactId>
+    <name>Product Catalog (Hayward Pools)</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <description>This is the custom module (Product Catalog) for running on a Jahia server.</description>
+    <description>Demo product catalog for Hayward Pools Inc sales demo</description>
 
     <scm>
-        <connection>scm:dummy:uri</connection>
-        <developerConnection>scm:dummy:uri</developerConnection>
+        <connection>scm:git:git@github.com:Jahia/product-catalog-hayward.git</connection>
+        <developerConnection>scm:git:git@github.com:Jahia/product-catalog-hayward.git</developerConnection>
+        <url>https://github.com/Jahia/product-catalog-hayward</url>
+        <tag>HEAD</tag>
     </scm>
 
     <repositories>

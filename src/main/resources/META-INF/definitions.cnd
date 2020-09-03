@@ -1,18 +1,18 @@
 <jnt = 'http://www.jahia.org/jahia/nt/1.0'>
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
-<productmix = 'http://www.jahia.org/jahia/productmix/1.0'>
+<pcmix = 'http://www.jahia.org/jahia/pcmix/1.0'>
 
-[productmix:productComponent] > jmix:droppableContent, jmix:editorialContent mixin
+[pcmix:productComponent] > jmix:droppableContent, jmix:editorialContent mixin
 
-[productmix:productReference] > jnt:content, productmix:productComponent, jmix:nodeReference
+[pcmix:productReference] > jnt:content, pcmix:productComponent, jmix:nodeReference
  - refTitle (string) protected primary
- - j:node (weakreference, picker[type='editorial']) < 'productmix:product'
-// - product (weakreference, choicelist[nodes='$currentSite/contents//*;productmix:product'])
+ - product (weakreference, choicelist[nodes='$currentSite/contents//*;pcmix:product'])
+// - j:node (weakreference, picker[type='editorial']) < 'pcmix:product'
 
 
-[productmix:product] > jnt:content, productmix:productComponent, mix:title
- - model (string, text) mandatory
+[pcmix:product] > jnt:content, pcmix:productComponent, mix:title
+ - model (string) mandatory
  - description (string, richtext) mandatory
  - image (weakreference, picker[type='image'])
- - price (decimal, text) mandatory
- - manual (uri, text)
+ - price (decimal) = '0.00' mandatory
+ - manual (uri) = 'https://'
