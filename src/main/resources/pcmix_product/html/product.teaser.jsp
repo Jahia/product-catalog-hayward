@@ -17,13 +17,9 @@
     <legend>${fn:escapeXml(jcr:label(currentNode.primaryNodeType, currentResource.locale))}</legend>
 </c:if>
 
-<jcr:nodeProperty node="${currentNode}" name="jcr:title" var="name" />
-<jcr:nodeProperty node="${currentNode}" name="description" var="description" />
-<jcr:nodeProperty node="${currentNode}" name="model" var="model" />
-<jcr:nodeProperty node="${currentNode}" name="price" var="price" />
+<jcr:nodeProperty node="${currentNode}" name="name" var="name" />
 <jcr:nodeProperty node="${currentNode}" name="image" var="image" />
 <c:url value="${url.files}${image.node.path}" var="imageUrl" />
-<jcr:nodeProperty node="${currentNode}" name="manual" var="manual" />
 
 <div class="contents">
     <h2>${name}</h2>

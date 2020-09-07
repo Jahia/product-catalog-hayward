@@ -1,0 +1,25 @@
+// _activities.scss	
+
+/* Imports */
+@import 'compass/css3';	
+
+/* Variables */
+$colorLinkActivity: #007FB6;
+$fontSizeStravaTable: 12px;
+
+#activitiesTable {
+	font-size: $fontSizeStravaTable;
+	td {
+	    color: #333;
+	}
+	a {
+	    color: $colorLinkActivity;
+	    cursor: pointer;
+	    text-decoration: none;
+	}
+	a:hover {
+	    color: $colorLinkActivity;
+	    cursor: pointer;
+	    text-decoration: underline;
+	}
+}

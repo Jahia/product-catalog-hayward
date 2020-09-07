@@ -2,17 +2,24 @@
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
 <pcmix = 'http://www.jahia.org/jahia/pcmix/1.0'>
 
+[jnt:xmlMountPoint] > jnt:mountPoint
+ - j:xmlPath (string) nofulltext
+
+[jnt:xmlMountPointFactoryPage] > jnt:content, jmix:siteComponent, mix:title, jmix:studioOnly, jmix:mountPointFactory
+
+[jnt:xmlMountPointFactoryForm] > jnt:content, jmix:siteComponent, mix:title, jmix:studioOnly
+
 [pcmix:productComponent] > jmix:droppableContent, jmix:editorialContent mixin
 
 [pcmix:productReference] > jnt:content, pcmix:productComponent, jmix:nodeReference
  - refTitle (string) protected primary
  - product (weakreference, choicelist[nodes='$currentSite/contents//*;pcmix:product'])
-// - j:node (weakreference, picker[type='editorial']) < 'pcmix:product'
 
-
-[pcmix:product] > jnt:content, pcmix:productComponent, mix:title
- - model (string) mandatory
- - description (string, richtext) mandatory
+[pcmix:product] > jnt:content, pcmix:productComponent
+ - id (long) mandatory
+ - name (string) mandatory
+ - model (string)
+ - description (string, richtext)
  - image (weakreference, picker[type='image'])
- - price (decimal) = '0.00' mandatory
- - manual (uri) = 'https://'
+ - price (decimal) = 0.00
+ - manual (uri)

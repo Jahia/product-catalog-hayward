@@ -18,7 +18,7 @@
 <%--@elvariable id="currentResource" type="org.jahia.services.render.Resource"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 
-<jcr:nodeProperty node="${currentNode}" name="jcr:title" var="name" />
+<jcr:nodeProperty node="${currentNode}" name="name" var="name" />
 <jcr:nodeProperty node="${currentNode}" name="description" var="description" />
 <jcr:nodeProperty node="${currentNode}" name="model" var="model" />
 <jcr:nodeProperty node="${currentNode}" name="price" var="price" />

@@ -1,0 +1,64 @@
+/* Imports */
+@import 'activities';
+@import 'activity';
+@import 'compass/css3';	
+@import "nav.scss";
+
+/* Variables */
+$logoStrava: "strava-logo.svg";
+$logoDevelopment: "development.png";
+
+body.body-bg {
+    background-color: white !important;
+    background-image: none !important;
+}
+
+.wrapper {
+    border-top: none !important;
+    box-shadow: none !important;
+    margin: 0 auto;
+    padding: 0 20px 0 20px !important;
+    min-width: 320px;
+    margin-top: 20px;
+}
+
+.strava-logo {
+	@include border-radius(25px);
+	@include box-shadow(black 1px 1px 2px);
+    height: 24px;
+    width: 114px;
+    background-image: url($logoStrava);
+    background-size: 100%;
+    background-position: left top;
+    display: inline-block;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    text-align: left;
+    text-indent: -999em;
+    padding-bottom: 15px;
+    float: left;
+    padding: 0;
+    line-height: 0;
+    margin-top: 15.5px;
+    margin-left: 10px;
+}
+
+.strava-align {
+    text-align: center !important;
+}
+
+.development {
+    transform: rotate(90deg);
+    position: absolute;
+    width: 149px;
+    height: 149px;
+    top: 0;
+    right: 0;
+    border: 0;
+    z-index: 1000;
+    background-image: url($logoDevelopment);
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+

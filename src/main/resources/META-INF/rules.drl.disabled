@@ -1,4 +1,4 @@
-package org.jahiapresales.modules.productcatalog.rules
+package org.jahiapresales.modules.productcataloghayward.rules
 
 // list any import classes here.
 import org.jahia.services.content.rules.*
