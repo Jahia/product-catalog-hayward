@@ -38,10 +38,11 @@ import org.w3c.dom.NodeList;
 import to.XmlProductTO;
 
 public class XmlDataSourceWritable implements ExternalDataSource, Writable, Searchable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(XmlDataSourceWritable.class);
     private String xmlFilePath = "";
-    private static final String PCMIX_PRODUCT = "pcmix:product";
-    private static final String JNT_CONTENT_FOLDER = "jnt:contentFolder";
+    private static final String CONTENT_TYPE = "pcmix:product";
+    private static final String CONTENT_FOLDER = "jnt:contentFolder";
+    private static final String ROOT = "root";
+    private static final String ELEMENT_TAG = "product";
     private static final String ID = "id";
     private static final String NAME = "name";
     private static final String MODEL = "model";
@@ -49,8 +50,6 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
     private static final String PRICE = "price";
     private static final String IMAGE = "image";
     private static final String MANUAL = "manual";
-    private static final String ROOT = "root";
-    private static final String ELEMENT_TAG = "product";
     private static final Logger logger = LoggerFactory.getLogger(XmlDataSourceWritable.class);
 
     public XmlDataSourceWritable() {
@@ -70,30 +69,28 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
     private JSONArray queryXML() throws RepositoryException {
         try {
             if (StringUtils.isEmpty(this.xmlFilePath)) {
-                return new JSONArray("[]");
+                return new JSONArray();
             } else {
-                logger.info("queryXML(), parsing the file:" + this.xmlFilePath);
+                logger.info("queryXML(), parsing the file: " + this.xmlFilePath);
                 StringBuilder jsonData = new StringBuilder();
                 File xmlFile = new File(this.xmlFilePath);
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                 Document doc = dBuilder.parse(xmlFile);
                 doc.getDocumentElement().normalize();
-                logger.info("queryXML(), XML Root element :" + doc.getDocumentElement().getNodeName());
-                NodeList nList = doc.getElementsByTagName("product");
+                logger.info("queryXML(), XML Root element: " + doc.getDocumentElement().getNodeName());
+                NodeList nList = doc.getElementsByTagName(ELEMENT_TAG);
 
                 for(int index = 0; index < nList.getLength(); ++index) {
                     Node nNode = nList.item(index);
-                    logger.info("queryXML(), XML Current Element :" + nNode.getNodeName());
+                    logger.info("queryXML(), XML Current Element: " + nNode.getNodeName());
                     if (nNode.getNodeType() == 1) {
                         Element eElement = (Element)nNode;
-                        if (eElement != null) {
-                            if (jsonData.length() != 0) {
-                                jsonData.append(",");
-                            }
-
-                            jsonData.append((new XmlProductTO(eElement)).toJsonString());
+                        if (jsonData.length() != 0) {
+                            jsonData.append(",");
                         }
+
+                        jsonData.append((new XmlProductTO(eElement)).toJsonString());
                     }
                 }
 
@@ -108,7 +105,7 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
         if (StringUtils.isNotBlank(id)) {
             for(int i = 0; i < products.length(); ++i) {
                 JSONObject product = products.getJSONObject(i);
-                if (id.equals(product.getString("id"))) {
+                if (id.equals(product.getString(ID))) {
                     return product;
                 }
             }
@@ -117,15 +114,16 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
         return null;
     }
 
+    @Override
     public List<String> getChildren(String path) throws RepositoryException {
-        List<String> r = new ArrayList();
+        ArrayList<String> r = new ArrayList<>();
         if (path.equals("/")) {
             try {
                 JSONArray children = this.queryXML();
 
                 for(int i = 1; i <= children.length(); ++i) {
                     JSONObject child = (JSONObject)children.get(i - 1);
-                    r.add(XmlUtils.displayNumberTwoDigits(i) + "-" + "product" + "-" + child.get("id"));
+                    r.add(XmlUtils.displayNumberTwoDigits(i) + "-" + "product" + "-" + child.get(ID));
                 }
             } catch (JSONException var6) {
                 throw new RepositoryException(var6);
@@ -135,23 +133,25 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
         return r;
     }
 
+    @Override
     public ExternalData getItemByIdentifier(String identifier) throws ItemNotFoundException {
         if (identifier.equals("root")) {
-            return new ExternalData(identifier, "/", "jnt:contentFolder", new HashMap());
+            return new ExternalData(identifier, "/", CONTENT_FOLDER, new HashMap<>());
         } else {
-            Map<String, String[]> properties = new HashMap();
+            Map<String, String[]> properties = new HashMap<>();
             String[] idProduct = identifier.split("-");
             if (idProduct.length == 3) {
                 try {
                     JSONObject product = this.getProduct(idProduct[2], this.queryXML());
-                    properties.put("id", new String[]{product.getString("id")});
-                    properties.put("name", new String[]{product.getString("name")});
-                    properties.put("model", new String[]{product.getString("model")});
-                    properties.put("description", new String[]{product.getString("description")});
-                    properties.put("price", new String[]{product.getString("price")});
-                    properties.put("image", new String[]{product.getString("image")});
-                    properties.put("manual", new String[]{product.getString("manual")});
-                    return new ExternalData(identifier, "/" + identifier, "pcmix:product", properties);
+                    assert product != null;
+                    properties.put(ID, new String[]{product.getString(ID)});
+                    properties.put(NAME, new String[]{product.getString(NAME)});
+                    properties.put(MODEL, new String[]{product.getString(MODEL)});
+                    properties.put(DESCRIPTION, new String[]{product.getString(DESCRIPTION)});
+                    properties.put(PRICE, new String[]{product.getString(PRICE)});
+                    properties.put(IMAGE, new String[]{product.getString(IMAGE)});
+                    properties.put(MANUAL, new String[]{product.getString(MANUAL)});
+                    return new ExternalData(identifier, "/" + identifier, CONTENT_TYPE, properties);
                 } catch (Exception var5) {
                     throw new ItemNotFoundException(identifier);
                 }
@@ -161,46 +161,49 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
         }
     }
 
+    @Override
     public ExternalData getItemByPath(String path) throws PathNotFoundException {
         String[] splitPath = path.split("/");
 
         try {
-            return splitPath.length <= 1 ? this.getItemByIdentifier("root") : this.getItemByIdentifier(splitPath[1]);
-        } catch (ItemNotFoundException var4) {
-            throw new PathNotFoundException(var4);
+            return splitPath.length <= 1 ? this.getItemByIdentifier(ROOT) : this.getItemByIdentifier(splitPath[1]);
+        } catch (ItemNotFoundException e) {
+            throw new PathNotFoundException(e);
         }
     }
 
+    @Override
     public List<String> search(ExternalQuery query) throws RepositoryException {
-        List<String> paths = new ArrayList();
+        List<String> paths = new ArrayList<>();
         String nodeType = QueryHelper.getNodeType(query.getSource());
-        if (NodeTypeRegistry.getInstance().getNodeType("pcmix:product").isNodeType(nodeType)) {
+        if (NodeTypeRegistry.getInstance().getNodeType(CONTENT_TYPE).isNodeType(nodeType)) {
             try {
-                JSONArray products = this.queryXML();
+                JSONArray items = this.queryXML();
 
-                for(int i = 1; i <= products.length(); ++i) {
-                    JSONObject product = (JSONObject)products.get(i - 1);
-                    String path = "/" + XmlUtils.displayNumberTwoDigits(i) + "-" + "product" + "-" + product.get("id");
+                for(int i = 1; i <= items.length(); ++i) {
+                    JSONObject product = (JSONObject)items.get(i - 1);
+                    String path = "/" + XmlUtils.displayNumberTwoDigits(i) + "-" + "product" + "-" + product.get(ID);
                     paths.add(path);
                 }
-            } catch (JSONException var8) {
-                throw new RepositoryException(var8);
+            } catch (JSONException e) {
+                throw new RepositoryException(e);
             }
         }
 
         return paths;
     }
 
+    @Override
     public void saveItem(ExternalData data) throws RepositoryException {
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(this.xmlFilePath);
             Map<String, String[]> productProps = data.getProperties();
-            String productId = productProps.containsKey("id") ? ((String[])productProps.get("id"))[0] : "";
+            String productId = productProps.containsKey(ID) ? ((String[])productProps.get(ID))[0] : "";
             boolean isNew = true;
             Element rootElement = doc.getDocumentElement();
-            NodeList nList = doc.getElementsByTagName("product");
+            NodeList nList = doc.getElementsByTagName(ELEMENT_TAG);
 
             Element eElement;
             for(int index = 0; index < nList.getLength(); ++index) {
@@ -209,12 +212,12 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
                     eElement = (Element)nNode;
                     XmlProductTO productTO = new XmlProductTO(eElement);
                     if (productTO.getId().trim().equals(productId.trim())) {
-                        setValue("name", eElement, productProps.containsKey("name") ? ((String[])productProps.get("name"))[0] : "");
-                        setValue("model", eElement, productProps.containsKey("model") ? ((String[])productProps.get("model"))[0] : "");
-                        setValue("description", eElement, productProps.containsKey("description") ? ((String[])productProps.get("description"))[0] : "");
-                        setValue("image", eElement, productProps.containsKey("image") ? ((String[])productProps.get("image"))[0] : "");
-                        setValue("price", eElement, productProps.containsKey("price") ? ((String[])productProps.get("price"))[0] : "");
-                        setValue("manual", eElement, productProps.containsKey("manual") ? ((String[])productProps.get("manual"))[0] : "");
+                        setValue(NAME, eElement, productProps.containsKey(NAME) ? ((String[])productProps.get(NAME))[0] : "");
+                        setValue(MODEL, eElement, productProps.containsKey(MODEL) ? ((String[])productProps.get(MODEL))[0] : "");
+                        setValue(DESCRIPTION, eElement, productProps.containsKey(DESCRIPTION) ? ((String[])productProps.get(DESCRIPTION))[0] : "");
+                        setValue(IMAGE, eElement, productProps.containsKey(IMAGE) ? ((String[])productProps.get(IMAGE))[0] : "");
+                        setValue(PRICE, eElement, productProps.containsKey(PRICE) ? ((String[])productProps.get(PRICE))[0] : "");
+                        setValue(MANUAL, eElement, productProps.containsKey(MANUAL) ? ((String[])productProps.get(MANUAL))[0] : "");
                         logger.info("saveItem(), XML update Current Element :" + nNode.getNodeName());
                         isNew = false;
                     }
@@ -222,21 +225,21 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
             }
 
             if (isNew) {
-                Element newProduct = doc.createElement("product");
-                Element idElement = doc.createElement("id");
-                idElement.appendChild(doc.createTextNode(productProps.containsKey("id") ? ((String[])productProps.get("id"))[0] : ""));
-                eElement = doc.createElement("name");
-                eElement.appendChild(doc.createTextNode(productProps.containsKey("name") ? ((String[])productProps.get("name"))[0] : ""));
-                Element modelElement = doc.createElement("model");
-                modelElement.appendChild(doc.createTextNode(productProps.containsKey("model") ? ((String[])productProps.get("model"))[0] : ""));
-                Element descriptionElement = doc.createElement("description");
-                descriptionElement.appendChild(doc.createTextNode(productProps.containsKey("description") ? ((String[])productProps.get("description"))[0] : ""));
-                Element imageElement = doc.createElement("image");
-                imageElement.appendChild(doc.createTextNode(productProps.containsKey("image") ? ((String[])productProps.get("image"))[0] : ""));
-                Element priceElement = doc.createElement("price");
-                priceElement.appendChild(doc.createTextNode(productProps.containsKey("price") ? ((String[])productProps.get("price"))[0] : ""));
-                Element manualElement = doc.createElement("manual");
-                manualElement.appendChild(doc.createTextNode(productProps.containsKey("manual") ? ((String[])productProps.get("manual"))[0] : ""));
+                Element newProduct = doc.createElement(ELEMENT_TAG);
+                Element idElement = doc.createElement(ID);
+                idElement.appendChild(doc.createTextNode(productProps.containsKey(ID) ? ((String[])productProps.get(ID))[0] : ""));
+                eElement = doc.createElement(NAME);
+                eElement.appendChild(doc.createTextNode(productProps.containsKey(NAME) ? ((String[])productProps.get(NAME))[0] : ""));
+                Element modelElement = doc.createElement(MODEL);
+                modelElement.appendChild(doc.createTextNode(productProps.containsKey(MODEL) ? ((String[])productProps.get(MODEL))[0] : ""));
+                Element descriptionElement = doc.createElement(DESCRIPTION);
+                descriptionElement.appendChild(doc.createTextNode(productProps.containsKey(DESCRIPTION) ? ((String[])productProps.get(DESCRIPTION))[0] : ""));
+                Element imageElement = doc.createElement(IMAGE);
+                imageElement.appendChild(doc.createTextNode(productProps.containsKey(IMAGE) ? ((String[])productProps.get(IMAGE))[0] : ""));
+                Element priceElement = doc.createElement(PRICE);
+                priceElement.appendChild(doc.createTextNode(productProps.containsKey(PRICE) ? ((String[])productProps.get(PRICE))[0] : ""));
+                Element manualElement = doc.createElement(MANUAL);
+                manualElement.appendChild(doc.createTextNode(productProps.containsKey(MANUAL) ? ((String[])productProps.get(MANUAL))[0] : ""));
                 rootElement.appendChild(newProduct);
                 newProduct.appendChild(idElement);
                 newProduct.appendChild(eElement);
@@ -252,9 +255,10 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File(this.xmlFilePath));
             transformer.transform(source, result);
-            LOGGER.info("saveItem(), Done......");
-        } catch (Exception var18) {
-            LOGGER.error("saveItem(), can't save the item, ", var18);
+            logger.info("saveItem(), Done......");
+        } catch (Exception e) {
+            logger.error("saveItem(), can't save the item, ", e);
+            throw new RepositoryException(e);
         }
 
     }
@@ -265,31 +269,38 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
         node.setTextContent(input);
     }
 
+    @Override
     public Set<String> getSupportedNodeTypes() {
-        return Sets.newHashSet(new String[]{"jnt:contentFolder", "pcmix:product"});
+        return Sets.newHashSet(CONTENT_FOLDER, CONTENT_TYPE);
     }
 
+    @Override
     public boolean isSupportsHierarchicalIdentifiers() {
         return false;
     }
 
+    @Override
     public boolean isSupportsUuid() {
         return false;
     }
 
+    @Override
     public boolean itemExists(String path) {
         return false;
     }
 
+    @Override
     public void move(String oldPath, String newPath) throws RepositoryException {
-        LOGGER.info("Move : oldPath=" + oldPath + " newPath=" + newPath);
+        logger.info("Move : oldPath=" + oldPath + " newPath=" + newPath);
     }
 
+    @Override
     public void order(String path, List<String> children) throws RepositoryException {
-        LOGGER.info("Order : path=" + path);
+        logger.info("Order : path=" + path);
     }
 
+    @Override
     public void removeItemByPath(String path) throws RepositoryException {
-        LOGGER.info("Remove item by path : path=" + path);
+        logger.info("Remove item by path : path=" + path);
     }
 }
