@@ -2,21 +2,21 @@
 <jahia-edp-products>
   <product>
     <id>1</id>
-    <name>25-productName</name>
-    <model>10003.3</model>
-    <description>Product</description>
+    <name>AquaRay</name>
+    <model>W3DV1000</model>
+    <description><![CDATA[ <p>AquaRay&reg; is an affordable, automatic suction cleaner with only one moving part for added reliability. Backed by the most trusted name in swimming pool equipment, AquaRay scoops up dirt and debris from three separate intake ports. Its gliding motion makes it an ideal choice for cleaning above-ground pools and is easily installed, without tools, in less than 10 minutes.</p> <p>&nbsp;</p> <ul> <li>Flapper technology - only one moving part</li> <li>Installs in less than 10 minutes without tools</li> <li>Works with your existing filtration system; no extra energy-consuming booster pump is required</li> <li>Pulls in dirt from three intake ports</li> <li>Automatic regulator valve sets the ideal suction</li> <li>Includes 32 feet of hose</li> </ul> ]]></description>
     <price>499.00</price>
-    <image></image>
-    <manual></manual>
+    <image>/sites/shared/files/images/Products/AquaRay.jpg</image>
+    <manual>https://www.hayward-pool.com/assets/documents/pools/pdf/literature/AquaRay-sellsheet-LITAQRAY14.pdf</manual>
   </product>
   <product>
     <id>2</id>
-    <name>35-productName</name>
-    <model>20003.3</model>
-    <description>Product-2</description>
+    <name>PowerFlo Matrix</name>
+    <model>SP1591</model>
+    <description><![CDATA[<ul><li>Industrial size strainer basket for large debris collection with minimal maintenance</li><li>Heavy-duty, high performance motor with integrated automatic thermal overload protector for years of operation</li><li>High performance impeller with wide openings to prevent clogging by leaves and debris</li><li>Horizontal/vertical discharge feature - simply converts from vertical to horizontal discharge orientation with the press of a button</li><li>Quick disconnect intake and discharge pipe connection</li></ul>]]></description>
     <price>193.50</price>
-    <image></image>
-    <manual></manual>
+    <image>https://hayward-pool-assets.com/assets/images/pools/products/large/PowerFloMatrix.jpg</image>
+    <manual>https://www.hayward-pool.com/assets/documents/pools/pdf/manuals/PowerFloMatrix-ISSP1591.pdf</manual>
   </product>
   <product>
     <id>3</id>

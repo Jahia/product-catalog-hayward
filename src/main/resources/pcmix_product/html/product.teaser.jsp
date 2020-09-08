@@ -19,9 +19,21 @@
 
 <jcr:nodeProperty node="${currentNode}" name="name" var="name" />
 <jcr:nodeProperty node="${currentNode}" name="image" var="image" />
-<c:url value="${url.files}${image.node.path}" var="imageUrl" />
+<c:url value="${url.base}${currentNode.path}.html" var="nodeUrl" />
+
+<c:if test="${not empty currentNode.properties['image']}">
+  <c:choose>
+  <c:when test="${functions:contains(image, 'http')}">
+    <c:set value="${image}" var="imageUrl" />
+  </c:when>
+  <c:otherwise>
+    <c:url value="${url.files}${image}" var="imageUrl" />
+  </c:otherwise>
+  </c:choose>
+</c:if>
 
 <div class="contents">
     <h2>${name}</h2>
-    <img src="${imageUrl}" />
+    <img src="${imageUrl}" width="256" height="256"/>
+    <p><a href="${nodeUrl}">Product Details</a></p>
 </div>

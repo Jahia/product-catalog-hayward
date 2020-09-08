@@ -20,6 +20,6 @@
  - name (string) mandatory
  - model (string)
  - description (string, richtext)
- - image (weakreference, picker[type='image'])
+ - image (string)
  - price (decimal) = 0.00
  - manual (uri)
