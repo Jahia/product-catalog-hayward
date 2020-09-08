@@ -2,6 +2,7 @@
 package org.jahia.modules.xmlprovider;
 
 import com.google.common.collect.Sets;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.lang.StringUtils;
 import org.jahia.modules.external.ExternalData;
 import org.jahia.modules.external.ExternalDataSource;
@@ -81,11 +83,11 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
                 logger.info("queryXML(), XML Root element: " + doc.getDocumentElement().getNodeName());
                 NodeList nList = doc.getElementsByTagName(ELEMENT_TAG);
 
-                for(int index = 0; index < nList.getLength(); ++index) {
+                for (int index = 0; index < nList.getLength(); ++index) {
                     Node nNode = nList.item(index);
                     logger.info("queryXML(), XML Current Element: " + nNode.getNodeName());
                     if (nNode.getNodeType() == 1) {
-                        Element eElement = (Element)nNode;
+                        Element eElement = (Element) nNode;
                         if (jsonData.length() != 0) {
                             jsonData.append(",");
                         }
@@ -103,7 +105,7 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
 
     private JSONObject getProduct(String id, JSONArray products) throws JSONException {
         if (StringUtils.isNotBlank(id)) {
-            for(int i = 0; i < products.length(); ++i) {
+            for (int i = 0; i < products.length(); ++i) {
                 JSONObject product = products.getJSONObject(i);
                 if (id.equals(product.getString(ID))) {
                     return product;
@@ -121,8 +123,8 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
             try {
                 JSONArray children = this.queryXML();
 
-                for(int i = 1; i <= children.length(); ++i) {
-                    JSONObject child = (JSONObject)children.get(i - 1);
+                for (int i = 1; i <= children.length(); ++i) {
+                    JSONObject child = (JSONObject) children.get(i - 1);
                     r.add(XmlUtils.displayNumberTwoDigits(i) + "-" + "product" + "-" + child.get(ID));
                 }
             } catch (JSONException var6) {
@@ -180,8 +182,8 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
             try {
                 JSONArray items = this.queryXML();
 
-                for(int i = 1; i <= items.length(); ++i) {
-                    JSONObject product = (JSONObject)items.get(i - 1);
+                for (int i = 1; i <= items.length(); ++i) {
+                    JSONObject product = (JSONObject) items.get(i - 1);
                     String path = "/" + XmlUtils.displayNumberTwoDigits(i) + "-" + "product" + "-" + product.get(ID);
                     paths.add(path);
                 }
@@ -200,24 +202,24 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(this.xmlFilePath);
             Map<String, String[]> productProps = data.getProperties();
-            String productId = productProps.containsKey(ID) ? ((String[])productProps.get(ID))[0] : "";
+            String productId = productProps.containsKey(ID) ? ((String[]) productProps.get(ID))[0] : "";
             boolean isNew = true;
             Element rootElement = doc.getDocumentElement();
             NodeList nList = doc.getElementsByTagName(ELEMENT_TAG);
 
             Element eElement;
-            for(int index = 0; index < nList.getLength(); ++index) {
+            for (int index = 0; index < nList.getLength(); ++index) {
                 Node nNode = nList.item(index);
                 if (nNode.getNodeType() == 1) {
-                    eElement = (Element)nNode;
+                    eElement = (Element) nNode;
                     XmlProductTO productTO = new XmlProductTO(eElement);
                     if (productTO.getId().trim().equals(productId.trim())) {
-                        setValue(NAME, eElement, productProps.containsKey(NAME) ? ((String[])productProps.get(NAME))[0] : "");
-                        setValue(MODEL, eElement, productProps.containsKey(MODEL) ? ((String[])productProps.get(MODEL))[0] : "");
-                        setValue(DESCRIPTION, eElement, productProps.containsKey(DESCRIPTION) ? ((String[])productProps.get(DESCRIPTION))[0] : "");
-                        setValue(IMAGE, eElement, productProps.containsKey(IMAGE) ? ((String[])productProps.get(IMAGE))[0] : "");
-                        setValue(PRICE, eElement, productProps.containsKey(PRICE) ? ((String[])productProps.get(PRICE))[0] : "");
-                        setValue(MANUAL, eElement, productProps.containsKey(MANUAL) ? ((String[])productProps.get(MANUAL))[0] : "");
+                        setValue(NAME, eElement, productProps.containsKey(NAME) ? ((String[]) productProps.get(NAME))[0] : "");
+                        setValue(MODEL, eElement, productProps.containsKey(MODEL) ? ((String[]) productProps.get(MODEL))[0] : "");
+                        setValue(DESCRIPTION, eElement, productProps.containsKey(DESCRIPTION) ? ((String[]) productProps.get(DESCRIPTION))[0] : "");
+                        setValue(IMAGE, eElement, productProps.containsKey(IMAGE) ? ((String[]) productProps.get(IMAGE))[0] : "");
+                        setValue(PRICE, eElement, productProps.containsKey(PRICE) ? ((String[]) productProps.get(PRICE))[0] : "");
+                        setValue(MANUAL, eElement, productProps.containsKey(MANUAL) ? ((String[]) productProps.get(MANUAL))[0] : "");
                         logger.info("saveItem(), XML update Current Element :" + nNode.getNodeName());
                         isNew = false;
                     }
@@ -227,19 +229,19 @@ public class XmlDataSourceWritable implements ExternalDataSource, Writable, Sear
             if (isNew) {
                 Element newProduct = doc.createElement(ELEMENT_TAG);
                 Element idElement = doc.createElement(ID);
-                idElement.appendChild(doc.createTextNode(productProps.containsKey(ID) ? ((String[])productProps.get(ID))[0] : ""));
+                idElement.appendChild(doc.createTextNode(productProps.containsKey(ID) ? ((String[]) productProps.get(ID))[0] : ""));
                 eElement = doc.createElement(NAME);
-                eElement.appendChild(doc.createTextNode(productProps.containsKey(NAME) ? ((String[])productProps.get(NAME))[0] : ""));
+                eElement.appendChild(doc.createTextNode(productProps.containsKey(NAME) ? ((String[]) productProps.get(NAME))[0] : ""));
                 Element modelElement = doc.createElement(MODEL);
-                modelElement.appendChild(doc.createTextNode(productProps.containsKey(MODEL) ? ((String[])productProps.get(MODEL))[0] : ""));
+                modelElement.appendChild(doc.createTextNode(productProps.containsKey(MODEL) ? ((String[]) productProps.get(MODEL))[0] : ""));
                 Element descriptionElement = doc.createElement(DESCRIPTION);
-                descriptionElement.appendChild(doc.createTextNode(productProps.containsKey(DESCRIPTION) ? ((String[])productProps.get(DESCRIPTION))[0] : ""));
+                descriptionElement.appendChild(doc.createTextNode(productProps.containsKey(DESCRIPTION) ? ((String[]) productProps.get(DESCRIPTION))[0] : ""));
                 Element imageElement = doc.createElement(IMAGE);
-                imageElement.appendChild(doc.createTextNode(productProps.containsKey(IMAGE) ? ((String[])productProps.get(IMAGE))[0] : ""));
+                imageElement.appendChild(doc.createTextNode(productProps.containsKey(IMAGE) ? ((String[]) productProps.get(IMAGE))[0] : ""));
                 Element priceElement = doc.createElement(PRICE);
-                priceElement.appendChild(doc.createTextNode(productProps.containsKey(PRICE) ? ((String[])productProps.get(PRICE))[0] : ""));
+                priceElement.appendChild(doc.createTextNode(productProps.containsKey(PRICE) ? ((String[]) productProps.get(PRICE))[0] : ""));
                 Element manualElement = doc.createElement(MANUAL);
-                manualElement.appendChild(doc.createTextNode(productProps.containsKey(MANUAL) ? ((String[])productProps.get(MANUAL))[0] : ""));
+                manualElement.appendChild(doc.createTextNode(productProps.containsKey(MANUAL) ? ((String[]) productProps.get(MANUAL))[0] : ""));
                 rootElement.appendChild(newProduct);
                 newProduct.appendChild(idElement);
                 newProduct.appendChild(eElement);
