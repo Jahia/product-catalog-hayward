@@ -8,22 +8,74 @@
                                jcr:primaryType="jnt:module">
          <portlets jcr:primaryType="jnt:portletFolder"/>
          <files jcr:primaryType="jnt:folder"/>
-         <contents jcr:primaryType="jnt:contentFolder"/>
-         <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
-            <files jcr:primaryType="jnt:folder"/>
-            <contents jcr:primaryType="jnt:contentFolder"/>
-            <product j:applyOn="pcmix:product"
-                     j:defaultTemplate="false"
-                     j:hiddenTemplate="false"
-                     jcr:primaryType="jnt:contentTemplate">
+         <contents jcr:primaryType="jnt:contentFolder">
+            <xml-mount-point-factory j:mountPointType="jnt:xmlMountPoint"
+                                     j:templateName="xml-factory"
+                                     jcr:primaryType="jnt:xmlMountPointFactoryPage">
                <j:translation_en jcr:language="en"
                                  jcr:mixinTypes="mix:title"
                                  jcr:primaryType="jnt:translation"
-                                 jcr:title="product"/>
-               <pagecontent jcr:primaryType="jnt:contentList">
-                  <main-resource-display j:mainResourceView="default" jcr:primaryType="jnt:mainResourceDisplay"/>
-               </pagecontent>
-            </product>
+                                 jcr:title="xml mount point factory"/>
+            </xml-mount-point-factory>
+         </contents>
+         <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
+            <files jcr:primaryType="jnt:folder"/>
+            <contents jcr:primaryType="jnt:contentFolder"/>
+            <base j:hiddenTemplate="false"
+                  j:view="serverSettings"
+                  jcr:primaryType="jnt:template">
+               <j:translation_en jcr:language="en"
+                                 jcr:mixinTypes="mix:title"
+                                 jcr:primaryType="jnt:translation"
+                                 jcr:title="base"/>
+               <xml-factory j:applyOn="jnt:xmlMountPointFactoryPage"
+                            j:defaultTemplate="false"
+                            j:hiddenTemplate="false"
+                            j:requiredPermissionNames="adminMountPoints"
+                            jcr:primaryType="jnt:contentTemplate">
+                  <j:translation_en jcr:language="en"
+                                    jcr:mixinTypes="mix:title"
+                                    jcr:primaryType="jnt:translation"
+                                    jcr:title="xml-factory"/>
+                  <pagecontent jcr:primaryType="jnt:contentList">
+                     <xml-mount-point-factory-form jcr:primaryType="jnt:xmlMountPointFactoryForm">
+                        <j:translation_en jcr:language="en"
+                                          jcr:mixinTypes="mix:title"
+                                          jcr:primaryType="jnt:translation"
+                                          jcr:title="xml-factory"/>
+                     </xml-mount-point-factory-form>
+                  </pagecontent>
+               </xml-factory>
+            </base>
+            <base-jahia-anthracite j:hiddenTemplate="false"
+                                   j:view="settingsBootstrap3GoogleMaterialStyle"
+                                   jcr:primaryType="jnt:template">
+               <j:translation_en jcr:language="en"
+                                 jcr:mixinTypes="mix:title"
+                                 jcr:primaryType="jnt:translation"
+                                 jcr:title="base-jahia-anthracite"/>
+               <xml-factory-jahia-anthracite j:applyOn="jnt:xmlMountPointFactoryPage"
+                                             j:defaultTemplate="true"
+                                             j:hiddenTemplate="false"
+                                             j:requiredPermissionNames="adminMountPoints"
+                                             j:view="settingsBootstrap3GoogleMaterialStyle"
+                                             jcr:primaryType="jnt:contentTemplate">
+                  <j:translation_en jcr:language="en"
+                                    jcr:mixinTypes="mix:title"
+                                    jcr:primaryType="jnt:translation"
+                                    jcr:title="xml-factory-jahia-anthracite"/>
+                  <pagecontent jcr:primaryType="jnt:contentList">
+                     <xml-mount-point-factory-form-jahia-anthracite j:view="settingsBootstrap3GoogleMaterialStyle"
+                                                                    jcr:mixinTypes="jmix:renderable"
+                                                                    jcr:primaryType="jnt:xmlMountPointFactoryForm">
+                        <j:translation_en jcr:language="en"
+                                          jcr:mixinTypes="mix:title"
+                                          jcr:primaryType="jnt:translation"
+                                          jcr:title="xml mount point factory form"/>
+                     </xml-mount-point-factory-form-jahia-anthracite>
+                  </pagecontent>
+               </xml-factory-jahia-anthracite>
+            </base-jahia-anthracite>
          </templates>
       </product-catalog-hayward>
    </modules>
